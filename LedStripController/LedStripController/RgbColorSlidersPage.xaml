@@ -35,9 +35,13 @@
 
         <Label x:Name="blueLabel" />
 
-        <Button Text="Click to send"
+        <Button Text="Save color"
                 VerticalOptions="CenterAndExpand"
                 HorizontalOptions="Center"
                 Clicked="OnButtonClicked" />
+
+        <StackLayout x:Name="SavedColorsLayout" Orientation="Horizontal">
+            
+        </StackLayout>
     </StackLayout>
 </ContentPage>

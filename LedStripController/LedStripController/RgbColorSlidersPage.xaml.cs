@@ -28,7 +28,7 @@ namespace LedStripController
         private void DelayTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             this.delay = false;
-            this.SendRgb();
+            this.SendRgb(this.red, this.blue, this.green);
         }
 
         private void OnSliderValueChanged(object sender, ValueChangedEventArgs args)
@@ -37,31 +37,30 @@ namespace LedStripController
             {
                 this.red = (int)args.NewValue;
                 this.redLabel.Text = String.Format("Red = {0:X2}", this.red);
-                this.SendRgb();
             }
             else if (sender == this.greenSlider)
             {
                 this.green = (int)args.NewValue;
                 this.greenLabel.Text = String.Format("Green = {0:X2}", this.green);
-                this.SendRgb();
             }
             else if (sender == this.blueSlider)
             {
                 this.blue = (int)args.NewValue;
                 this.blueLabel.Text = String.Format("Blue = {0:X2}", this.blue);
-                this.SendRgb();
             }
 
-            this.boxView.Color = Color.FromRgb((int) this.redSlider.Value,
-                                          (int) this.greenSlider.Value,
-                                          (int) this.blueSlider.Value);
+            this.SendRgb(this.red, this.green, this.blue);
+
+            this.boxView.Color = Color.FromRgb(this.red,
+                                          this.green,
+                                          this.blue);
         }
 
-        private void SendRgb()
+        private void SendRgb(int r, int g, int b)
         {
             if (!this.delay)
             {
-                this.streamWriter.Write($"rgb " + this.red + " " + this.green + " " + this.blue);
+                this.streamWriter.Write("rgb " + r + " " + g + " " + b);
             }
 
             this.delay = true;
@@ -70,7 +69,19 @@ namespace LedStripController
 
         private void OnButtonClicked(object sender, EventArgs args)
         {
-            this.SendRgb();
+            //this.SendRgb();
+            var button = new Button{ BackgroundColor = Color.FromRgb(this.red, this.green, this.blue)};
+            button.Clicked += this.PresetButtonClicked;
+            this.SavedColorsLayout.Children.Add(button);
+        }
+
+        private void PresetButtonClicked(object sender, EventArgs e)
+        {
+            var button = (Button) sender;
+            this.SendRgb(
+                (int)button.BackgroundColor.R * 255, 
+                (int)button.BackgroundColor.G * 255, 
+                (int)button.BackgroundColor.B * 255);
         }
     }
 }
