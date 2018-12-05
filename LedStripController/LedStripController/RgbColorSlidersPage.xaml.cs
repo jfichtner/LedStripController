@@ -23,12 +23,14 @@ namespace LedStripController
             this.streamWriter = new StreamWriter(this.tcpClient.GetStream());
             this.streamWriter.AutoFlush = true;
             this.delayTimer.Elapsed += this.DelayTimer_Elapsed;
+            this.delayTimer.AutoReset = false;
         }
 
         private void DelayTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             this.delay = false;
-            this.SendRgb(this.red, this.blue, this.green);
+            this.SendRgb(this.red, this.green, this.blue);
+            this.delayTimer.Stop();
         }
 
         private void OnSliderValueChanged(object sender, ValueChangedEventArgs args)
@@ -78,10 +80,14 @@ namespace LedStripController
         private void PresetButtonClicked(object sender, EventArgs e)
         {
             var button = (Button) sender;
-            this.SendRgb(
-                (int)button.BackgroundColor.R * 255, 
-                (int)button.BackgroundColor.G * 255, 
-                (int)button.BackgroundColor.B * 255);
+            this.redSlider.Value = (int)(button.BackgroundColor.R * 255);
+            this.greenSlider.Value = (int)(button.BackgroundColor.G * 255);
+            this.blueSlider.Value = (int)(button.BackgroundColor.B * 255);
+
+            //this.SendRgb(
+            //    (int)(button.BackgroundColor.R * 255), 
+            //    (int)(button.BackgroundColor.G * 255), 
+            //    (int)(button.BackgroundColor.B * 255));
         }
     }
 }
