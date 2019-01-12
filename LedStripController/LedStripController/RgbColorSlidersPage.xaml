@@ -35,10 +35,30 @@
 
         <Label x:Name="blueLabel" />
 
+        <StackLayout x:Name="StripSelectLayout" Orientation="Horizontal">
+            <Button x:Name="Ceiling" 
+                Text="Ceiling"
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="CenterAndExpand"
+                Clicked="OnCeilingButtonClicked" />
+
+            <Button x:Name="Both" 
+                Text="Both"
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="CenterAndExpand"
+                Clicked="OnBothButtonClicked" />
+
+            <Button x:Name="Desk" 
+                Text="Desk"
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="CenterAndExpand"
+                Clicked="OnDeskButtonClicked" />
+        </StackLayout>
+
         <Button Text="Save color"
                 VerticalOptions="CenterAndExpand"
                 HorizontalOptions="Center"
-                Clicked="OnButtonClicked" />
+                Clicked="OnSaveColorButtonClicked" />
 
         <StackLayout x:Name="SavedColorsLayout" Orientation="Horizontal">
             

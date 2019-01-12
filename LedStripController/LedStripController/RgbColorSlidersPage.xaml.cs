@@ -15,6 +15,10 @@ namespace LedStripController
         private int green;
         private readonly Timer delayTimer = new Timer(200);
         private bool delay;
+        private LedStrip strip = LedStrip.Both;
+
+        private enum LedStrip { Ceiling, Desk, Both }
+
 
         public RgbColorSlidersPage()
         {
@@ -24,6 +28,7 @@ namespace LedStripController
             this.streamWriter.AutoFlush = true;
             this.delayTimer.Elapsed += this.DelayTimer_Elapsed;
             this.delayTimer.AutoReset = false;
+            this.Both.FontAttributes = FontAttributes.Bold;
         }
 
         private void DelayTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -62,20 +67,56 @@ namespace LedStripController
         {
             if (!this.delay)
             {
-                this.streamWriter.Write("rgb " + r + " " + g + " " + b);
+                string stripVal = string.Empty;
+
+                if (strip == LedStrip.Ceiling)
+                {
+                    stripVal = " 0";
+                }
+
+                if(strip == LedStrip.Desk)
+                {
+                    stripVal = " 1";
+                }
+
+                this.streamWriter.Write("rgb " + r + " " + g + " " + b + stripVal);
             }
 
             this.delay = true;
             this.delayTimer.Start();
         }
 
-        private void OnButtonClicked(object sender, EventArgs args)
+        private void OnSaveColorButtonClicked(object sender, EventArgs args)
         {
-            //this.SendRgb();
             var button = new Button{ BackgroundColor = Color.FromRgb(this.red, this.green, this.blue)};
             button.Clicked += this.PresetButtonClicked;
             this.SavedColorsLayout.Children.Add(button);
         }
+
+        private void OnCeilingButtonClicked(object sender, EventArgs args)
+        {
+            strip = LedStrip.Ceiling;
+            this.Ceiling.FontAttributes = FontAttributes.Bold;
+            this.Both.FontAttributes = FontAttributes.None;
+            this.Desk.FontAttributes = FontAttributes.None;
+        }
+
+        private void OnBothButtonClicked(object sender, EventArgs args)
+        {
+            strip = LedStrip.Both;
+            this.Ceiling.FontAttributes = FontAttributes.None;
+            this.Both.FontAttributes = FontAttributes.Bold;
+            this.Desk.FontAttributes = FontAttributes.None;
+        }
+
+        private void OnDeskButtonClicked(object sender, EventArgs args)
+        {
+            strip = LedStrip.Desk;
+            this.Ceiling.FontAttributes = FontAttributes.None;
+            this.Both.FontAttributes = FontAttributes.None;
+            this.Desk.FontAttributes = FontAttributes.Bold;
+        }
+
 
         private void PresetButtonClicked(object sender, EventArgs e)
         {
